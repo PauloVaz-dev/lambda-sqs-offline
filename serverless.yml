@@ -2,7 +2,7 @@ service: serverless-offline-sqs-tutorial
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs14.x
   stage: local
   region: eu-west-2
 
@@ -13,38 +13,34 @@ package:
   - stage_variables/**
 
 plugins:
-  - serverless-offline
   - serverless-offline-sqs
-  - serverless-domain-manager
+  - serverless-offline
 
 custom:
-  stage: ${file(stage_variables/${opt:stage, self:provider.stage}.yaml)}
-  serverless-offline-sqs:
+  stage: local
+  serverless-offline-sqs:    
+    autoCreate: true                 # create queue if not exists
+    apiVersion: '2012-11-05'
     endpoint: http://0.0.0.0:9324
-    region: ${self:provider.region}
+    region: eu-west-2
     accessKeyId: root
     secretAccessKey: root
+    skipCacheInvalidation: false
 
 functions:
   message_producer:
-    handler: functions/function_producer/handler_producer.producer
-    package:
-      include:
-      - functions/function_producer/**/*
-    environment:
-      CAT_FACTS_QUEUE_URL: ${self:custom.stage.sqs.cat_facts.url}
+    handler: lambda/handler_producer.producer
+    description: test.
     events:
-    - http:
-        path: api/cat_facts
-        method: get
-        integration: lambda
+      - http:
+          path: api/cat_facts   
+          method: post
+          cors: true
+
   message_consumer:
-    handler: functions/function_consumer/handler_consumer.consumer
-    package:
-      include:
-      - functions/function_consumer/**/*
+    handler: lambda/handler_consumer.consumer
     events:
-      - sqs: ${self:custom.stage.sqs.cat_facts.arn}
+      - sqs: arn:aws:sqs:region:XXXXXX:cat_facts
 
 resources:
   Resources:

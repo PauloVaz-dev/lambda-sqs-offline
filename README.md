@@ -11,10 +11,8 @@ This project requires the following;
 * serverless framework
 * docker
 * aws-cli
+* graze/sqs-local image docker
 
-### Node.js and npm
-
-Download and install nodejs 8.10.
 
 ### Serverless Framework
 
@@ -22,7 +20,6 @@ Once npm is installed, install serverless npm package with
 
 `npm install -g serverless`
 
-If you run into a permission issue writing to /usr/local/lib/node_modules, I suggest to change the default global node modules location. Please follow this [workaround](https://github.com/npm/npm/issues/8165#issuecomment-264002075).
 
 ### AWS CLI
 This is needed for serverless-offline-sqs plugin to function. Follow (AWS official documentation)[https://docs.aws.amazon.com/cli/latest/userguide/installing.html] to install AWS CLI.
@@ -35,7 +32,7 @@ As for the region, enter `us-west-2`.
 
 To fully test the integration between API Gateway and the Lambda function, the full deployment can be emulated using [serverless-offline](https://github.com/dherault/serverless-offline)
 
-* Install plugins via NPM: `npm install` (One-off)
-* `./start.sh`
+* Install image graze/sqs-local
+* docker run -p 9324:9324 graze/sqs-local
 
-This will serve the full project locally on port `:3000` via an API gateway so GET and POST requests are required to access the functions pulling the settings from the `local` stage.
+* serverless offline start --stage local
