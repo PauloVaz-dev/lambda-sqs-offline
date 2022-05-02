@@ -32,7 +32,10 @@ As for the region, enter `us-west-2`.
 
 To fully test the integration between API Gateway and the Lambda function, the full deployment can be emulated using [serverless-offline](https://github.com/dherault/serverless-offline)
 
-* Install image graze/sqs-local
+* First install image graze/sqs-local
 * docker run -p 9324:9324 graze/sqs-local
 
+* Execute serveless
 * serverless offline start --stage local
+
+* Request to  http://localhost:3000/local/api/cat_facts Method POST   
